@@ -76,12 +76,13 @@ export const usePOSStore = create<POSStore>()(
         const tax = subtotal * 0.1
         const total = subtotal + tax
         const newHeldOrder: Order = {
-          id: uuidv4(),
-          items: cart,
-          subtotal,
-          tax,
-          total,
-          timestamp: Date.now(),
+            id: uuidv4(),
+            items: cart,
+            subtotal,
+            tax,
+            total,
+            timestamp: Date.now(),
+            date: ""
         }
         set((state) => ({
           heldOrders: [...state.heldOrders, newHeldOrder],
@@ -108,12 +109,13 @@ export const usePOSStore = create<POSStore>()(
         const tax = subtotal * 0.1
         const total = subtotal + tax
         const newOrder: Order = {
-          id: uuidv4(),
-          items: cart,
-          subtotal,
-          tax,
-          total,
-          timestamp: Date.now(),
+            id: uuidv4(),
+            items: cart,
+            subtotal,
+            tax,
+            total,
+            timestamp: Date.now(),
+            date: ""
         }
         set((state) => ({
           orderHistory: [newOrder, ...state.orderHistory],
