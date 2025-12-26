@@ -13,6 +13,7 @@ export interface Product {
 }
 
 export interface Order {
+  date: string | number | Date
   id: string
   items: Product[]
   subtotal: number

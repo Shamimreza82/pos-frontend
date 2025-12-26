@@ -40,7 +40,7 @@ export default function HeldOrdersDialog() {
             >
               <div>
                 <p>
-                  {new Date(order.date).toLocaleTimeString()} - {order.items.length}{" "}
+                  {new Date(order?.date).toLocaleTimeString()} - {order.items.length}{" "}
                   items
                 </p>
                 <p className="font-bold">৳ {order.total}</p>
