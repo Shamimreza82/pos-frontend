@@ -14,9 +14,11 @@ export interface Product {
 
 export interface Order {
   id: string
-  date: Date
   items: Product[]
+  subtotal: number
+  tax: number
   total: number
+  timestamp: number
 }
 
 // Define store state and actions
@@ -24,6 +26,7 @@ interface POSStore {
   cart: Product[]
   heldOrders: Order[]
   orderHistory: Order[]
+  lastCompletedOrder: Order | null
   addToCart: (product: Product) => void
   removeFromCart: (id: string) => void
   updateQuantity: (id: string, qty: number) => void
@@ -40,6 +43,7 @@ export const usePOSStore = create<POSStore>()(
       cart: [],
       heldOrders: [],
       orderHistory: [],
+      lastCompletedOrder: null,
       addToCart: (product) =>
         set((state) => {
           const existingProduct = state.cart.find((p) => p.id === product.id)
@@ -67,12 +71,16 @@ export const usePOSStore = create<POSStore>()(
         const cart = get().cart
         if (cart.length === 0) return
 
-        const total = cart.reduce((sum, p) => sum + p.price * (p.qty ?? 0), 0)
+        const subtotal = cart.reduce((sum, p) => sum + p.price * (p.qty ?? 0), 0)
+        const tax = subtotal * 0.1
+        const total = subtotal + tax
         const newHeldOrder: Order = {
           id: uuidv4(),
-          date: new Date(),
           items: cart,
+          subtotal,
+          tax,
           total,
+          timestamp: Date.now(),
         }
         set((state) => ({
           heldOrders: [...state.heldOrders, newHeldOrder],
@@ -95,15 +103,20 @@ export const usePOSStore = create<POSStore>()(
       },
       addOrderToHistory: () => {
         const cart = get().cart
-        const total = cart.reduce((sum, p) => sum + p.price * (p.qty ?? 0), 0)
+        const subtotal = cart.reduce((sum, p) => sum + p.price * (p.qty ?? 0), 0)
+        const tax = subtotal * 0.1
+        const total = subtotal + tax
         const newOrder: Order = {
           id: uuidv4(),
-          date: new Date(),
           items: cart,
+          subtotal,
+          tax,
           total,
+          timestamp: Date.now(),
         }
         set((state) => ({
           orderHistory: [newOrder, ...state.orderHistory],
+          lastCompletedOrder: newOrder,
         }))
       },
     }),

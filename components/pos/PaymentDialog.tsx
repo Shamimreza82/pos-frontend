@@ -2,6 +2,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import { Separator } from "../ui/separator"
 export default function PaymentDialog({ total }: { total: number }) {
   const [paymentStatus, setPaymentStatus] = useState("pending")
   const [open, setOpen] = useState(false)
+  const router = useRouter()
   const cart = usePOSStore((s) => s.cart)
   const clearCart = usePOSStore((s) => s.clearCart)
   const addOrderToHistory = usePOSStore((s) => s.addOrderToHistory)
@@ -32,6 +34,10 @@ export default function PaymentDialog({ total }: { total: number }) {
     clearCart()
     setPaymentStatus("pending")
     setOpen(false)
+  }
+
+  const handlePrint = () => {
+    router.push("/pos/print")
   }
 
   return (
@@ -108,7 +114,7 @@ export default function PaymentDialog({ total }: { total: number }) {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.print()}
+                onClick={handlePrint}
               >
                 Print Receipt
               </Button>
