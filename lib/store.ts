@@ -60,7 +60,7 @@ export const usePOSStore = create<POSStore>()(
         set((state) => ({
           cart: state.cart
             .map((p) => (p.id === id ? { ...p, qty } : p))
-            .filter((p) => p.qty > 0),
+            .filter((p) => (p.qty ?? 0) > 0),
         })),
       clearCart: () => set({ cart: [] }),
       holdOrder: () => {
